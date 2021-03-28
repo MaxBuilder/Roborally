@@ -35,7 +35,34 @@ boardGraph::boardGraph(Board &board) { // Choix d'un parcours exhaustif de toute
                     transitions.emplace_back(temp, move);
             }
 
-            graph.insert(std::make_pair(origin, transitions));
+            mGraph.insert(std::make_pair(origin, transitions));
         }
     }
+}
+
+// Obligé d'utiliser une template et un foncteur pour la comparaison (le compilateur n'acceptais pas une lambda)
+template<typename T, typename C>
+struct comp {
+    bool operator () (const std::pair<T, C>& lhs, const std::pair<T, C>& rhs) {return lhs.second > rhs.second; }
+};
+
+std::vector<Play> boardGraph::path(const Robot origin, const Robot destination) {
+    // Variables de l'algorithme de Dijkstra :
+    std::unordered_map<Robot, int, RobotHash, RobotEqual> d; // Distance
+    std::unordered_map<Robot, Play, RobotHash, RobotEqual> p; // Predecesseur
+
+    // Utilisation de paires (sommet + distance) pour éviter de créer un nouveau type)
+    std::priority_queue<std::pair<Robot, int>, std::vector<std::pair<Robot, int>>, comp<Robot, int>> s; // File à priorité (basse)
+
+    // Initialisation des distances à l'infini
+    for(const auto& vertex : mGraph)
+        d[vertex.first] = std::numeric_limits<int>::infinity();
+
+    // On place l'origine dans la file avec une distance de 0
+    s.push(std::make_pair(origin, 0));
+    d[origin] = 0;
+
+    // Traitment des sommets
+
+
 }
