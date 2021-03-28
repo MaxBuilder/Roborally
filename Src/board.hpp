@@ -58,6 +58,8 @@ struct Robot {
 
   /* A robot contains a location an a status */
 
+  Robot(Location l, Status s) : location(l), status(s) {};
+
   Location location ;
   Status status ;
 } ;
