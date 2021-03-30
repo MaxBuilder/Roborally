@@ -8,7 +8,7 @@
 #include "board.hpp"
 
 #include <unordered_map>
-#include <iostream>
+#include <algorithm>
 #include <vector>
 #include <queue>
 
@@ -16,6 +16,7 @@ using namespace RR;
 
 // Structure contenant un robot et un mouvement (correspond à un coup)
 struct Play {
+    Play() : robot(), move() {};
     Play(Robot r, Robot::Move m) : robot(r), move(m) {};
 
     Robot::Move move;
@@ -50,10 +51,18 @@ public:
 
     // Algorithme du plus court chemin entre deux points (implémentation de Dijkstraa)
     std::vector<Play> path(Robot origin, Robot destination);
-    std::vector<Play> path(const Robot origin, const Location destination);
+    std::vector<Play> path(Robot origin, Location destination);
 
 private:
     std::unordered_map<Robot, std::vector<Play>, RobotHash, RobotEqual> mGraph;
+
+    // Variables réutilisées :
+    const std::vector<Robot::Status> statuses = {
+            Robot::Status::EAST,
+            Robot::Status::NORTH,
+            Robot::Status::WEST,
+            Robot::Status::SOUTH,
+    };
 };
 
 

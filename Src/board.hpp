@@ -15,12 +15,15 @@ namespace RR {
 struct Location {
 
   Location(int l, int c) ;
-  Location() {}
+  Location() = default;
 
-  bool operator==(const Location& rhs) const ;
+  bool operator == (const Location& rhs) const ;
+  bool operator != (const Location& rhs) const {
+      return this->line != rhs.line or this->column != rhs.column;
+  }
 
-  int line ;
-  int column ;
+  int line{} ;
+  int column{} ;
 
 } ;
 
@@ -58,7 +61,12 @@ struct Robot {
 
   /* A robot contains a location an a status */
 
+  Robot() : location(), status() {};
   Robot(Location l, Status s) : location(l), status(s) {};
+
+  bool operator != (const Robot& rhs) const {
+      return this->status != rhs.status or this->location != rhs.location;
+  }
 
   Location location ;
   Status status ;
