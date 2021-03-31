@@ -18,9 +18,7 @@ struct Location {
   Location() = default;
 
   bool operator == (const Location& rhs) const ;
-  bool operator != (const Location& rhs) const {
-      return this->line != rhs.line or this->column != rhs.column;
-  }
+  bool operator != (const Location& rhs) const ;
 
   int line{} ;
   int column{} ;
@@ -61,15 +59,18 @@ struct Robot {
 
   /* A robot contains a location an a status */
 
-  Robot() : location(), status() {};
-  Robot(Location l, Status s) : location(l), status(s) {};
+  Robot();
+  Robot(Location l, Status s);
 
-  bool operator != (const Robot& rhs) const {
-      return this->status != rhs.status or this->location != rhs.location;
-  }
+  bool operator != (const Robot& rhs) const;
 
   Location location ;
   Status status ;
+
+  // Fonctions d'affichage sur sortie standard
+  friend std::ostream& operator << (std::ostream& stream, const Robot& robot);
+  friend std::ostream& operator << (std::ostream& stream, const Robot::Move& move);
+  friend std::ostream& operator << (std::ostream& stream, const Robot::Status& status);
 } ;
 
 /* Board */
@@ -82,7 +83,7 @@ struct Board {
    *   - the column of the tile
    *   - the type of the tile (see below)
    */
-  Board(const std::string& filename) ;
+  explicit Board(const std::string& filename) ;
   
   /* backup */
   void save(const std::string& filename) const ;

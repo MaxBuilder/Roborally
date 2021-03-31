@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
 
   //serve appdata folder for static files
   
-  auto ret = srv.set_mount_point("/", "./appdata") ;
+  auto ret = srv.set_mount_point("/", "../appdata") ;
   if(!ret) {
     std::cout << "données de l'application introuvables" << std::endl ;
     return 2 ;

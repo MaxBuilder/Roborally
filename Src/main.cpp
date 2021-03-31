@@ -6,37 +6,30 @@
 int main() {
     RR::Board b("Data/board.txt") ;
     boardGraph graph(b);
+    std::cout << std::endl << "-----------------------------------------------------------------" << std::endl << std::endl;
+
     Robot start = Robot({0, 1}, Robot::Status::EAST);
     Robot end = Robot({3, 4}, Robot::Status::EAST);
     Location endLoc = Location(3, 4);
-    auto res = graph.path(start, endLoc);
+    auto path = graph.path(start, end);
 
-    std::cout << "Plus court chemin : " << std::endl;
-    for(auto& r : res) {
-        std::cout << r.robot.location.line << " " << r.robot.location.column << " , move : " << (int)r.move << std::endl;
+    std::cout << "Plus court chemin entre : " << start << " et " << end << std::endl;
+    for(auto& step : path) {
+        std::cout << step.robot << " -> " << step.move << std::endl;
     }
+    std::cout << end << " - Terminé" << std::endl;
 
-    std::cout << std::endl << "Comparaison :" << std::endl;
+    std::cout << std::endl << "Vérification :" << std::endl;
     Robot test = start;
-    for(auto& r : res) {
-        std::cout << r.robot.location.line << " " << r.robot.location.column << std::endl;
-        b.play(test, r.move);
+    for(auto& step : path) {
+        std::cout << step.robot << std::endl;
+        b.play(test, step.move);
     }
-    std::cout << test.location.line << " " << test.location.column << " " << (int)test.status << std::endl;
+    std::cout << test << std::endl;
+
+    std::cout << std::endl << "-----------------------------------------------------------------" << std::endl << std::endl;
+
+    // Joueur artificiel
 
     return 0 ;
 }
-/*
-    FORWARD_1 -> 0
-    FORWARD_2 -> 1
-    FORWARD_3 -> 2
-    BACKWARD_1 -> 3
-    TURN_LEFT -> 4
-    TURN_RIGHT -> 5
-    U_TURN -> 6
-
-    EAST -> 0
-    NORTH -> 1
-    WEST -> 2
-    SOUTH -> 3
- */

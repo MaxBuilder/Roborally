@@ -22,6 +22,58 @@ enum struct Rotation {
   NONE
 } ;
 
+std::ostream& operator << (std::ostream& stream, const Robot& robot) {
+    return stream << robot.location.line << "," << robot.location.column << " : " << robot.status;
+}
+
+std::ostream& operator << (std::ostream& stream, const Robot::Move& move) {
+    switch(move) {
+        case Robot::Move::FORWARD_1:
+            stream << "FORWARD_1";
+            break;
+        case Robot::Move::FORWARD_2:
+            stream << "FORWARD_2";
+            break;
+        case Robot::Move::FORWARD_3:
+            stream << "FORWARD_3";
+            break;
+        case Robot::Move::BACKWARD_1:
+            stream << "BACKWARD_1";
+            break;
+        case Robot::Move::TURN_LEFT:
+            stream << "TURN_LEFT";
+            break;
+        case Robot::Move::TURN_RIGHT:
+            stream << "TURN_RIGHT";
+            break;
+        case Robot::Move::U_TURN:
+            stream << "U_TURN";
+            break;
+    }
+    return stream;
+}
+
+std::ostream& operator << (std::ostream& stream, const Robot::Status& status) {
+    switch(status) {
+        case Robot::Status::EAST:
+            stream << "EAST";
+            break;
+        case Robot::Status::NORTH:
+            stream << "NORTH";
+            break;
+        case Robot::Status::WEST:
+            stream << "WEST";
+            break;
+        case Robot::Status::SOUTH:
+            stream << "SOUTH";
+            break;
+        case Robot::Status::DEAD:
+            stream << "DEAD";
+            break;
+    }
+    return stream;
+}
+
 /* strongly typed enum manipulation */
 /* https://stackoverflow.com/questions/8357240/how-to-automatically-convert-strongly-typed-enum-into-int */
 template <typename T>
@@ -39,6 +91,10 @@ bool Location::operator==(const Location& rhs) const {
   return (line == rhs.line) && (column == rhs.column) ;
 }
 
+bool Location::operator != (const Location& rhs) const {
+    return this->line != rhs.line or this->column != rhs.column;
+}
+
 std::size_t LocationHash::operator()(const Location& l) const {
   if(sizeof(long long) == 2*sizeof(int)) {
     //this supposedly always happens
@@ -54,6 +110,16 @@ std::size_t LocationHash::operator()(const Location& l) const {
     concat |= l.column ;
     return std::hash< std::bitset<16*sizeof(int)> >()(concat) ;
   }
+}
+
+/**** Robot ****/
+
+Robot::Robot() : location(), status() {}
+
+Robot::Robot(Location l, Status s) : location(l), status(s) {}
+
+bool Robot::operator != (const Robot& rhs) const {
+    return this->status != rhs.status or this->location != rhs.location;
 }
 
 /**** Tile manipulation ****/
