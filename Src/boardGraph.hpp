@@ -1,7 +1,3 @@
-//
-// Created by raph on 3/27/21.
-//
-
 #ifndef PROJET_BOARDGRAPH_HPP
 #define PROJET_BOARDGRAPH_HPP
 

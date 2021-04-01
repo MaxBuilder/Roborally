@@ -1,7 +1,3 @@
-//
-// Created by raph on 3/27/21.
-//
-
 #include "boardGraph.hpp"
 
 boardGraph::boardGraph(Board &board) { // Choix d'un parcours exhaustif de toutes les cases
