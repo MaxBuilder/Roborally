@@ -17,14 +17,16 @@ private:
     struct Node {
         Robot current;
         Robot parent;
-        int heuristic;
-        int costSoFar;
+        int heuristic{};
+        int costSoFar{};
         std::vector<Robot::Move> hand;
-        int movesLeft;
+        int movesLeft{};
         Robot::Move transition;
 
+        Node() = default;
         Node(Robot current, Robot parent, int heursitic, int costSoFar, const std::vector<Robot::Move>& hand, int movesLeft, Robot::Move transition);
 
+        /*
         Node& operator = (const Node& n) {
             current.location.line = n.current.location.line;
             current.location.column = n.current.location.column;
@@ -44,7 +46,7 @@ private:
                 hand.push_back(m);
 
             return *this;
-        }
+        }*/
     };
 
     boardGraph mGraph;

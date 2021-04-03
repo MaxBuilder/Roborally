@@ -126,7 +126,7 @@ bool Robot::operator != (const Robot& rhs) const {
 }
 
 bool Robot::operator == (const Robot& rhs) const {
-    return this->status == rhs.status and this->location == rhs.location;
+    return (location.line == rhs.location.line) && (location.column == rhs.location.column) && (status == rhs.status);
 }
 
 /**** Tile manipulation ****/

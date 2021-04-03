@@ -35,38 +35,38 @@ std::vector<Play> artificialPlayer::play(Robot origin, Location destination, mov
             return buildPath(u, closedList, origin);
         }
 
+        std::cout << "Transi" << std::endl;
         auto transitions = mGraph.getTransitions(u.current);
         //std::cout << "Nouveau sommet" << std::endl;
         for(auto transition : transitions) { // Exploration des voisins
             int cost = u.costSoFar + 1;
             int heuristic = cost + distance(destination, transition.robot.location);
             Node v(transition.robot, u.current, heuristic, cost, u.hand, u.movesLeft, transition.move);
-            std::cout << "v : " << v.current << " " << v.movesLeft << std::endl;
+            //std::cout << "v : " << v.current << " " << v.movesLeft << std::endl;
 
             if(!checkTransition(v)) {
-                //std::cout << "Cut transition" << std::endl;
+                std::cout << "Cut transition" << std::endl;
                 continue;
             }
-            //std::cout << "Go transition" << std::endl;
+            std::cout << "Go transition" << std::endl;
 
             if(!isInClosedList(closedList, v)) {
                 if(isInOpenListWithLowerCost(openList, v)) {
-
+                    std::cout << v.costSoFar << std::endl;
                     // Mise à jour du coût
                     std::queue<Node> temp;
                     while(!openList.empty()) {
                         Node tempNode = openList.top();
                         openList.pop();
-                        if(tempNode.current == v.current)
-                            tempNode = v;
+                        if(tempNode.current == v.current) {
+                            //tempNode = v;
+                        }
                         temp.push(tempNode);
                     }
                     while (!temp.empty()) {
                         openList.push(temp.front());
                         temp.pop();
                     }
-
-
                 }
                 else openList.push(v);
             }
