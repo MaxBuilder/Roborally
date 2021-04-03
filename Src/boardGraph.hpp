@@ -49,6 +49,11 @@ public:
     std::vector<Play> path(Robot origin, Robot destination);
     std::vector<Play> path(Robot origin, Location destination);
 
+    // Interface avec le graph
+    std::vector<Play> getTransitions(const Robot& robot) {
+        return mGraph[robot];
+    }
+
 private:
     std::unordered_map<Robot, std::vector<Play>, RobotHash, RobotEqual> mGraph;
 

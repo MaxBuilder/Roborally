@@ -44,7 +44,8 @@ struct Robot {
     BACKWARD_1,
     TURN_LEFT,
     TURN_RIGHT,
-    U_TURN
+    U_TURN,
+    None
   } ;
   
   /* Robot status (mostly orientation) */
@@ -63,6 +64,7 @@ struct Robot {
   Robot(Location l, Status s);
 
   bool operator != (const Robot& rhs) const;
+  bool operator == (const Robot& rhs) const;
 
   Location location ;
   Status status ;

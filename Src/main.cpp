@@ -45,6 +45,13 @@ int main() {
     deck.shuffle();
 
     artificialPlayer player(graph);
+    auto autoPath = player.play(start, endLoc, deck);
+
+    std::cout << "Plus court chemin avec le deck entre : " << start << " et " << endLoc.line << "," << endLoc.column << std::endl;
+    for(auto& step : path) {
+        std::cout << step.robot << " -> " << step.move << std::endl;
+    }
+    std::cout << end << " - Terminé" << std::endl;
 
     return 0 ;
 }

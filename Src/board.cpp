@@ -49,6 +49,9 @@ std::ostream& operator << (std::ostream& stream, const Robot::Move& move) {
         case Robot::Move::U_TURN:
             stream << "U_TURN";
             break;
+        case Robot::Move::None:
+            stream << "NONE";
+            break;
     }
     return stream;
 }
@@ -120,6 +123,10 @@ Robot::Robot(Location l, Status s) : location(l), status(s) {}
 
 bool Robot::operator != (const Robot& rhs) const {
     return this->status != rhs.status or this->location != rhs.location;
+}
+
+bool Robot::operator == (const Robot& rhs) const {
+    return this->status == rhs.status or this->location == rhs.location;
 }
 
 /**** Tile manipulation ****/
@@ -314,7 +321,7 @@ static void robot_apply(
     /* the robot is on a belt, move it */
     robot_push(board, robot, dir) ;
 
-    /* get the arrival tile, throws if does not exist */
+    /* getTransitions the arrival tile, throws if does not exist */
     Board::TileType dest_tile = board.tiles.at(robot.location) ;
 
     /* handle the rotation of the destination tile */

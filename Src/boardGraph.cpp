@@ -20,16 +20,16 @@ boardGraph::boardGraph(Board &board) { // Choix d'un parcours exhaustif de toute
                 Robot temp = origin;
                 board.play(temp, move);
 
-                if(temp.status != Robot::Status::DEAD)
+                if(temp.status != Robot::Status::DEAD) // Si le robot n'est pas mort (permet d'économiser de la mémoire)
                     transitions.emplace_back(temp, move);
             }
 
-            mGraph.insert(std::make_pair(origin, transitions));
+            mGraph.insert(std::make_pair(origin, transitions)); // On insère le sommet et ses transitions
         }
     }
 }
 
-// Obligé d'utiliser une template et un foncteur pour la comparaison (le compilateur n'acceptais pas une lambda)
+// Obligé d'utiliser une template et un foncteur pour la comparaison (le compilateur n'acceptais pas une lambdaà cause de la pair)
 template<typename T, typename C>
 struct comp {
     bool operator () (const std::pair<T, C>& lhs, const std::pair<T, C>& rhs) {return lhs.second > rhs.second; }
@@ -47,7 +47,7 @@ std::vector<Play> boardGraph::path(const Robot origin, const Robot destination) 
     for(const auto& vertex : mGraph)
         d[vertex.first] = std::numeric_limits<int>::max();
 
-    // On place l'origine dans la file avec une distance de 0
+    // On place l'origine dans la file avec une distance de 0 :
     s.push(std::make_pair(origin, 0));
     d[origin] = 0;
 
