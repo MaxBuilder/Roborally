@@ -4,6 +4,9 @@
 #include "boardGraph.hpp"
 #include "moveDeck.hpp"
 
+#include <iostream>
+
+
 class artificialPlayer {
 public:
     explicit artificialPlayer(boardGraph& graph);
@@ -21,6 +24,27 @@ private:
         Robot::Move transition;
 
         Node(Robot current, Robot parent, int heursitic, int costSoFar, const std::vector<Robot::Move>& hand, int movesLeft, Robot::Move transition);
+
+        Node& operator = (const Node& n) {
+            current.location.line = n.current.location.line;
+            current.location.column = n.current.location.column;
+            current.status = n.current.status;
+
+            parent.location.line = n.parent.location.line;
+            parent.location.column = n.parent.location.column;
+            parent.status = n.parent.status;
+
+            heuristic = n.heuristic;
+            costSoFar = n.costSoFar;
+            movesLeft = n.movesLeft;
+            transition = n.transition;
+
+            hand.clear();
+            for(auto m : n.hand)
+                hand.push_back(m);
+
+            return *this;
+        }
     };
 
     boardGraph mGraph;
@@ -31,9 +55,9 @@ private:
 
     bool checkTransition(Node& n);
     int distance(Location l1, Location l2);
-    bool isInClosedList(std::queue<Node> closedList, artificialPlayer::Node &node);
-    bool isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, artificialPlayer::Node &n);
-    std::vector<Play> buildPath(Node& destination, std::queue<Node> closedList);
+    bool isInClosedList(std::queue<Node> closedList, const Node &node);
+    bool isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, const Node &n);
+    std::vector<Play> buildPath(Node& destination, std::queue<Node> closedList, Robot origin);
 };
 
 #endif //PROJET_ARTIFICIALPLAYER_HPP
