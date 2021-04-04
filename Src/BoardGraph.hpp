@@ -1,7 +1,7 @@
 #ifndef PROJET_BOARDGRAPH_HPP
 #define PROJET_BOARDGRAPH_HPP
 
-#include "board.hpp"
+#include "Board.hpp"
 
 #include <unordered_map>
 #include <algorithm>
@@ -39,25 +39,29 @@ struct RobotEqual {
     }
 };
 
-class boardGraph {
+class BoardGraph {
 
 public:
-    // Constructeur de la classe, prend un plateau en paramètre et construit le graph
-    explicit boardGraph(Board& board);
+    // Construit le graph en fonction du plateau passé en paramètre
+    explicit BoardGraph(Board& board);
 
-    // Algorithme du plus court chemin entre deux points (implémentation de Dijkstraa)
+    // Chemin avec orientation finale exacte
     std::vector<Play> path(Robot origin, Robot destination);
+
+    // Chemin avec orientation finale quelquonque
     std::vector<Play> path(Robot origin, Location destination);
 
     // Interface avec le graph
-    std::vector<Play> getTransitions(const Robot& robot) {
-        return mGraph[robot];
-    }
+    std::vector<Play> getTransitions(const Robot& robot);
 
 private:
+    // Boucle principale de l'aglorithme de Dijkstra
+    void shortestPath(const Robot& origin, std::unordered_map<Robot, int, RobotHash, RobotEqual>& d, std::unordered_map<Robot, Play, RobotHash, RobotEqual>& p);
+
+    // Structure contenant le graph
     std::unordered_map<Robot, std::vector<Play>, RobotHash, RobotEqual> mGraph;
 
-    // Variables réutilisées :
+    // Orientations possibles du robot :
     const std::vector<Robot::Status> statuses = {
             Robot::Status::EAST,
             Robot::Status::NORTH,

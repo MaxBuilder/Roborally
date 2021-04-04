@@ -1,4 +1,4 @@
-#include "board.hpp"
+#include "Board.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -437,6 +437,8 @@ void Board::play (
       robot_rotate(robot, Rotation::RIGHT) ;
       robot_rotate(robot, Rotation::RIGHT) ;
       break ;
+      case Robot::Move::None:
+          break;
   }
 
   try {

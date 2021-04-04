@@ -1,19 +1,19 @@
-#include "artificialPlayer.hpp"
+#include "ArtificialPlayer.hpp"
 
-artificialPlayer::Node::Node(Robot c, Robot p, int h, int cost, const std::vector<Robot::Move>& m, int ml, Robot::Move t)
+ArtificialPlayer::Node::Node(Robot c, Robot p, int h, int cost, const std::vector<Robot::Move>& m, int ml, Robot::Move t)
 : current(c), parent(p), heuristic(h), costSoFar(cost), hand(m), movesLeft(ml), transition(t) {
 
 }
 
-artificialPlayer::artificialPlayer(boardGraph& graph)
+ArtificialPlayer::ArtificialPlayer(BoardGraph& graph)
 : mGraph(graph) {}
 
-std::vector<Play> artificialPlayer::play(Robot origin, Location destination, moveDeck& deck) {
+std::vector<Play> ArtificialPlayer::play(Robot origin, Location destination, MoveDeck& deck) {
     // Variables de l'algorithme a* :
     std::priority_queue<Node, std::vector<Node>, NodeComp> openList;
     std::queue<Node> closedList;
 
-    // Tirage des mouvements (cout pour le debug)
+    // Tirage des mouvements (affichage pour le debug)
     auto d = deck.draw();
     std::cout << "Coups possibles : " << std::endl;
     for(auto m : d) {
@@ -29,32 +29,22 @@ std::vector<Play> artificialPlayer::play(Robot origin, Location destination, mov
         Node u = openList.top();
         openList.pop();
 
-        //std::cout << u.current << " " << u.movesLeft << std::endl;
-        if(u.current.location == destination) { // Si le but est atteint on reconstruit le chemin
-            //std::cout << "Found !!!";
-            return buildPath(u, closedList, origin);
-        }
+        if(u.current.location == destination) // Si le but est atteint on reconstruit le chemin
+            return buildPath(origin, u, closedList);
 
-        //std::cout << "Transi" << std::endl;
         auto transitions = mGraph.getTransitions(u.current);
-        //std::cout << "Nouveau sommet" << std::endl;
         for(auto transition : transitions) { // Exploration des voisins
             int cost = u.costSoFar + 1;
             int heuristic = cost + distance(destination, transition.robot.location);
             Node v(transition.robot, u.current, heuristic, cost, u.hand, u.movesLeft, transition.move);
-            //std::cout << "v : " << v.current << " " << v.movesLeft << std::endl;
 
-            if(!checkTransition(v)) {
-                //std::cout << "Cut transition" << std::endl;
+            if(!checkTransition(v))
                 continue;
-            }
-            //std::cout << "Go transition" << std::endl;
 
             if(!isInClosedList(closedList, v)) {
                 if(isInOpenListWithLowerCost(openList, v)) {
-                    //std::cout << v.costSoFar << std::endl;
-                    // Mise à jour du coût
-                    std::queue<Node> temp;
+
+                    std::queue<Node> temp; // Mise à jour du coût
                     while(!openList.empty()) {
                         Node tempNode = openList.top();
                         openList.pop();
@@ -74,27 +64,20 @@ std::vector<Play> artificialPlayer::play(Robot origin, Location destination, mov
         closedList.push(u);
     }
 
-    // Approximation du sommet le plus proche
+    // Approximation du sommet le plus proche (à faire)
     return std::vector<Play>();
 
 }
 
-std::vector<Play> artificialPlayer::buildPath(Node &destination, std::queue<Node> closedList, Robot origin) {
-    //std::cout << " Call " << std::endl;
-    //std::cout << closedList.size() << std::endl;
-
+std::vector<Play> ArtificialPlayer::buildPath(Robot origin, Node& destination, std::queue<Node> closedList) {
     std::vector<Play> res;
     Node temp = destination;
 
     while(temp.current != origin) {
-        //std::cout << temp.current << std::endl;
         std::queue<Node> tempQ = closedList;
-
         res.emplace_back(temp.parent, temp.transition);
-
         while(tempQ.front().current != temp.parent)
             tempQ.pop();
-
         temp = tempQ.front();
     }
 
@@ -102,7 +85,7 @@ std::vector<Play> artificialPlayer::buildPath(Node &destination, std::queue<Node
     return res;
 }
 
-bool artificialPlayer::isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, const Node &n) {
+bool ArtificialPlayer::isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, const Node &n) {
     while(!openList.empty()) {
         Node l = openList.top();
         if(l.current == n.current and l.costSoFar > n.costSoFar)
@@ -112,7 +95,7 @@ bool artificialPlayer::isInOpenListWithLowerCost(std::priority_queue<Node, std::
     return false;
 }
 
-bool artificialPlayer::isInClosedList(std::queue<Node> closedList, const Node &node) {
+bool ArtificialPlayer::isInClosedList(std::queue<Node> closedList, const Node &node) {
     while(!closedList.empty()) {
         if(closedList.front().current == node.current)
             return true;
@@ -121,7 +104,7 @@ bool artificialPlayer::isInClosedList(std::queue<Node> closedList, const Node &n
     return false;
 }
 
-bool artificialPlayer::checkTransition(Node &n) {
+bool ArtificialPlayer::checkTransition(Node &n) {
     if(n.movesLeft == 0)
         return false;
 
@@ -136,7 +119,7 @@ bool artificialPlayer::checkTransition(Node &n) {
     return false;
 }
 
-int artificialPlayer::distance(Location l1, Location l2) {
+int ArtificialPlayer::distance(Location l1, Location l2) {
     int d = std::abs(l1.line - l2.line) + std::abs(l1.column - l2.column);
     int r = 0;
     if(d % 3 != 0)

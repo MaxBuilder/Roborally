@@ -1,16 +1,19 @@
 #ifndef PROJET_ARTIFICIALPLAYER_HPP
 #define PROJET_ARTIFICIALPLAYER_HPP
 
-#include "boardGraph.hpp"
-#include "moveDeck.hpp"
+#include "BoardGraph.hpp"
+#include "MoveDeck.hpp"
 
 #include <iostream>
 
 
-class artificialPlayer {
+class ArtificialPlayer {
 public:
-    explicit artificialPlayer(boardGraph& graph);
-    std::vector<Play> play(Robot origin, Location destination, moveDeck& deck);
+    // Initialise le joueur artificiel avec un graph
+    explicit ArtificialPlayer(BoardGraph& graph);
+
+    // Chemin le plus court en fonction d'un set de mouvements (implémentation de a*)
+    std::vector<Play> play(Robot origin, Location destination, MoveDeck& deck);
 
 private:
     // Elements de A* :
@@ -26,7 +29,7 @@ private:
         Node() = default;
         Node(Robot current, Robot parent, int heursitic, int costSoFar, const std::vector<Robot::Move>& hand, int movesLeft, Robot::Move transition);
 
-        /*
+        /* Unused
         Node& operator = (const Node& n) {
             current.location.line = n.current.location.line;
             current.location.column = n.current.location.column;
@@ -49,17 +52,22 @@ private:
         }*/
     };
 
-    boardGraph mGraph;
+    // Graphe du plateau
+    BoardGraph mGraph;
 
+    // Foncteur de comparaison entre sommets de a*
     struct NodeComp {
         bool operator () (const Node& lhs, const Node& rhs) { return lhs.heuristic > rhs.heuristic; }
     };
 
+    // Fonction auxiliaires
     bool checkTransition(Node& n);
     int distance(Location l1, Location l2);
     bool isInClosedList(std::queue<Node> closedList, const Node &node);
     bool isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, const Node &n);
-    std::vector<Play> buildPath(Node& destination, std::queue<Node> closedList, Robot origin);
+
+    // Reconstruit le chemin à parcourir après traitement des sommets par a*
+    std::vector<Play> buildPath(Robot origin, Node& destination, std::queue<Node> closedList);
 };
 
 #endif //PROJET_ARTIFICIALPLAYER_HPP

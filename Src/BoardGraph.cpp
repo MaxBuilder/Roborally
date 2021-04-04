@@ -1,6 +1,6 @@
-#include "boardGraph.hpp"
+#include "BoardGraph.hpp"
 
-boardGraph::boardGraph(Board &board) { // Choix d'un parcours exhaustif de toutes les cases
+BoardGraph::BoardGraph(Board &board) { // Choix d'un parcours exhaustif de toutes les cases
     const std::vector<Robot::Move> moves = {
         Robot::Move::FORWARD_1,
         Robot::Move::FORWARD_2,
@@ -35,11 +35,7 @@ struct comp {
     bool operator () (const std::pair<T, C>& lhs, const std::pair<T, C>& rhs) {return lhs.second > rhs.second; }
 };
 
-std::vector<Play> boardGraph::path(const Robot origin, const Robot destination) {
-    // Variables de l'algorithme de Dijkstra :
-    std::unordered_map<Robot, int, RobotHash, RobotEqual> d; // Distance
-    std::unordered_map<Robot, Play, RobotHash, RobotEqual> p; // Predecesseur
-
+void BoardGraph::shortestPath(const Robot& origin, std::unordered_map<Robot, int, RobotHash, RobotEqual>& d, std::unordered_map<Robot, Play, RobotHash, RobotEqual>& p) {
     // Utilisation de paires (sommet + distance) pour éviter de créer un nouveau type)
     std::priority_queue<std::pair<Robot, int>, std::vector<std::pair<Robot, int>>, comp<Robot, int>> s; // File à priorité (basse)
 
@@ -66,6 +62,15 @@ std::vector<Play> boardGraph::path(const Robot origin, const Robot destination) 
             }
         }
     }
+}
+
+std::vector<Play> BoardGraph::path(const Robot origin, const Robot destination) {
+    // Variables de l'algorithme de Dijkstra :
+    std::unordered_map<Robot, int, RobotHash, RobotEqual> d; // Distance
+    std::unordered_map<Robot, Play, RobotHash, RobotEqual> p; // Predecesseur
+
+    // Appel :
+    shortestPath(origin, d, p);
 
     // Construction du résultat :
     Robot temp = destination;
@@ -84,37 +89,13 @@ std::vector<Play> boardGraph::path(const Robot origin, const Robot destination) 
     return res;
 }
 
-std::vector<Play> boardGraph::path(const Robot origin, const Location destination) {
+std::vector<Play> BoardGraph::path(const Robot origin, const Location destination) {
     // Variables de l'algorithme de Dijkstra :
     std::unordered_map<Robot, int, RobotHash, RobotEqual> d; // Distance
     std::unordered_map<Robot, Play, RobotHash, RobotEqual> p; // Predecesseur
 
-    // Utilisation de paires (sommet + distance) pour éviter de créer un nouveau type)
-    std::priority_queue<std::pair<Robot, int>, std::vector<std::pair<Robot, int>>, comp<Robot, int>> s; // File à priorité (basse)
-
-    // Initialisation des distances au max
-    for(const auto& vertex : mGraph)
-        d[vertex.first] = std::numeric_limits<int>::max();
-
-    // On place l'origine dans la file avec une distance de 0
-    s.push(std::make_pair(origin, 0));
-    d[origin] = 0;
-
-    // Traitement des sommets :
-    while(not s.empty()) {
-        Robot u = s.top().first;
-        s.pop();
-
-        // Exploration de toutes les transitions du sommet
-        for(Play t : mGraph[u]) {
-            Robot v = t.robot;
-            if(d[v] > d[u] + 1) { // Un chemin plus court est trouvé
-                d[v] = d[u] + 1; // Mise à jour de la distance
-                p[v] = Play(u, t.move); // Mise à jour du prédecesseur
-                s.push(std::make_pair(v, d[v]));
-            }
-        }
-    }
+    // Appel :
+    shortestPath(origin, d, p);
 
     // Selection de la meilleure orientation :
     Robot::Status best;
@@ -141,4 +122,8 @@ std::vector<Play> boardGraph::path(const Robot origin, const Location destinatio
 
     std::reverse(res.begin(), res.end()); // Inversion du tableau
     return res;
+}
+
+std::vector<Play> BoardGraph::getTransitions(const Robot& robot){
+    return mGraph[robot];
 }

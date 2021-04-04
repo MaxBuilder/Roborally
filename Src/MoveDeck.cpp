@@ -1,19 +1,19 @@
-#include "moveDeck.hpp"
+#include "MoveDeck.hpp"
 
 #include <random>
 
-moveDeck::moveDeck() : moveDrawn(0) {}
+MoveDeck::MoveDeck() : moveDrawn(0) {}
 
-void moveDeck::shuffle() {
+void MoveDeck::shuffle() {
     std::shuffle(moves.begin(), moves.end(), std::mt19937(std::random_device()()));
 }
 
-void moveDeck::add(Robot::Move move, int nb) {
+void MoveDeck::add(Robot::Move move, int nb) {
     for(int i = 0 ; i < nb ; i++)
         moves.push_back(move);
 }
 
-std::vector<Robot::Move> moveDeck::draw(int nb) {
+std::vector<Robot::Move> MoveDeck::draw(int nb) {
     std::vector<Robot::Move> res;
     res.reserve(nb);
     for(int i = 0 ; i < nb ; i++) {

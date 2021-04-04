@@ -4,7 +4,7 @@ project(Projet)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Projet Src/main.cpp
-        Src/board.hpp Src/board.cpp
-        Src/boardGraph.hpp Src/boardGraph.cpp
-        Src/artificialPlayer.hpp Src/artificialPlayer.cpp
-        Src/moveDeck.hpp Src/moveDeck.cpp)
+        Src/Board.hpp Src/Board.cpp
+        Src/BoardGraph.hpp Src/BoardGraph.cpp
+        Src/ArtificialPlayer.hpp Src/ArtificialPlayer.cpp
+        Src/MoveDeck.hpp Src/MoveDeck.cpp)

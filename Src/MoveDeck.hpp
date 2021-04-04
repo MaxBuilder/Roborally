@@ -1,16 +1,16 @@
 #ifndef PROJET_MOVEDECK_HPP
 #define PROJET_MOVEDECK_HPP
 
-#include "board.hpp"
+#include "Board.hpp"
 
 #include <algorithm>
 #include <vector>
 
 using namespace RR;
 
-class moveDeck {
+class MoveDeck {
 public:
-    moveDeck();
+    MoveDeck();
 
     void shuffle();
     void add(Robot::Move move, int nb = 1);
