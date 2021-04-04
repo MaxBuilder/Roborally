@@ -64,7 +64,7 @@ void BoardGraph::shortestPath(const Robot& origin, std::unordered_map<Robot, int
     }
 }
 
-std::vector<Play> BoardGraph::path(const Robot origin, const Robot destination) {
+std::vector<Robot::Move> BoardGraph::path(const Robot origin, const Robot destination) {
     // Variables de l'algorithme de Dijkstra :
     std::unordered_map<Robot, int, RobotHash, RobotEqual> d; // Distance
     std::unordered_map<Robot, Play, RobotHash, RobotEqual> p; // Predecesseur
@@ -74,14 +74,14 @@ std::vector<Play> BoardGraph::path(const Robot origin, const Robot destination) 
 
     // Construction du résultat :
     Robot temp = destination;
-    std::vector<Play> res;
+    std::vector<Robot::Move> res;
 
     if(d[origin] == std::numeric_limits<int>::max()) // Cas d'un chemin impossible
         return res;
 
     while(temp != origin) {
         Play play = p[temp];
-        res.push_back(play);
+        res.push_back(play.move);
         temp = play.robot;
     }
 
@@ -89,7 +89,7 @@ std::vector<Play> BoardGraph::path(const Robot origin, const Robot destination) 
     return res;
 }
 
-std::vector<Play> BoardGraph::path(const Robot origin, const Location destination) {
+std::vector<Robot::Move> BoardGraph::path(const Robot origin, const Location destination) {
     // Variables de l'algorithme de Dijkstra :
     std::unordered_map<Robot, int, RobotHash, RobotEqual> d; // Distance
     std::unordered_map<Robot, Play, RobotHash, RobotEqual> p; // Predecesseur
@@ -100,7 +100,7 @@ std::vector<Play> BoardGraph::path(const Robot origin, const Location destinatio
     // Selection de la meilleure orientation :
     Robot::Status best;
     int bestDistance = std::numeric_limits<int>::max();
-    std::vector<Play> res;
+    std::vector<Robot::Move> res;
     for(auto status : statuses) {
         Robot trial(destination, status);
         if(d[trial] < bestDistance) {
@@ -116,7 +116,7 @@ std::vector<Play> BoardGraph::path(const Robot origin, const Location destinatio
     Robot temp(destination, best);
     while(temp != origin) {
         Play play = p[temp];
-        res.push_back(play);
+        res.push_back(play.move);
         temp = play.robot;
     }
 

@@ -46,10 +46,10 @@ public:
     explicit BoardGraph(Board& board);
 
     // Chemin avec orientation finale exacte
-    std::vector<Play> path(Robot origin, Robot destination);
+    std::vector<Robot::Move> path(Robot origin, Robot destination);
 
     // Chemin avec orientation finale quelquonque
-    std::vector<Play> path(Robot origin, Location destination);
+    std::vector<Robot::Move> path(Robot origin, Location destination);
 
     // Interface avec le graph
     std::vector<Play> getTransitions(const Robot& robot);

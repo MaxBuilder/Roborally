@@ -10,27 +10,46 @@ int main() {
     BoardGraph graph(b);
     std::cout << "OK !" << std::endl;
 
-    std::cout << std::endl << "-----------------------------------------------------------------" << std::endl;
-    std::cout << "Plus court chemin entre deux cases : " << std::endl << std::endl;
-
+    // Variables de test :
     Robot start = Robot({0, 1}, Robot::Status::EAST);
     Robot end = Robot({3, 4}, Robot::Status::EAST);
     Location endLoc = Location(3, 4);
-    auto path = graph.path(start, endLoc);
+
+    std::cout << std::endl << "-----------------------------------------------------------------" << std::endl;
+    std::cout << "Plus court chemin entre deux cases : " << std::endl << std::endl;
+
+    auto path1 = graph.path(start, end);
 
     std::cout << "Plus court chemin entre : " << start << " et " << end << std::endl;
-    for(auto& step : path) {
-        std::cout << step.robot << " -> " << step.move << std::endl;
+    for(auto& step : path1) {
+        std::cout << step << std::endl;
     }
-    std::cout << end << " - Termine" << std::endl;
 
     std::cout << std::endl << "Verification avec le plateau:" << std::endl;
-    Robot test = start;
-    for(auto& step : path) {
-        std::cout << step.robot << std::endl;
-        b.play(test, step.move);
+    Robot test1 = start;
+    for(auto& step : path1) {
+        std::cout << test1 << " -> " << step << std::endl;
+        b.play(test1, step);
     }
-    std::cout << test << std::endl;
+    std::cout << test1 << std::endl;
+
+    std::cout << std::endl << "-----------------------------------------------------------------" << std::endl;
+    std::cout << "Plus court chemin entre deux cases (orientation finale quelqonque) : " << std::endl << std::endl;
+
+    auto path2 = graph.path(start, endLoc);
+
+    std::cout << "Plus court chemin entre : " << start << " et " << endLoc.line << "," << endLoc.column << std::endl;
+    for(auto& step : path2) {
+        std::cout << step << std::endl;
+    }
+
+    std::cout << std::endl << "Verification avec le plateau:" << std::endl;
+    Robot test2 = start;
+    for(auto& step : path2) {
+        std::cout << test2 << " -> " << step << std::endl;
+        b.play(test2, step);
+    }
+    std::cout << test2 << std::endl;
 
     std::cout << std::endl << "-----------------------------------------------------------------" << std::endl;
     std::cout << "Utilisation d'un joueur artificiel et d'un deck avec tirage aleatoire : " << std::endl << std::endl;
@@ -45,14 +64,22 @@ int main() {
     deck.add(Robot::Move::U_TURN, 1);
     deck.shuffle();
 
-    ArtificialPlayer player(graph);
-    auto autoPath = player.play(start, endLoc, deck);
-
-    std::cout << "Plus court chemin avec le deck entre : " << start << " et " << endLoc.line << "," << endLoc.column << std::endl;
-    for(auto& step : autoPath) {
-        std::cout << step.robot << " -> " << step.move << std::endl;
+    // Tirage des mouvements (peut être directement mis dans l'appel, fait ici pour afficher)
+    auto drawn = deck.draw();
+    std::cout << "Coups possibles : " << std::endl;
+    for(auto move : drawn) {
+        std::cout << move << std::endl;
     }
-    std::cout << end << " - Termine" << std::endl;
+    std::cout << std::endl;
+
+    ArtificialPlayer player(graph);
+    auto autoPath = player.play(start, endLoc, drawn);
+
+    std::cout << "Chemin avec le deck entre : " << start << " et " << endLoc.line << "," << endLoc.column << std::endl;
+    for(auto& step : autoPath) {
+        std::cout << step << std::endl;
+    }
+    std::cout << "Case finale : " << end << std::endl;
 
     return 0 ;
 }

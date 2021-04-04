@@ -23,7 +23,7 @@ enum struct Rotation {
 } ;
 
 std::ostream& operator << (std::ostream& stream, const Robot& robot) {
-    return stream << robot.location.line << "," << robot.location.column << " : " << robot.status;
+    return stream << robot.location.line << "," << robot.location.column << "," << robot.status;
 }
 
 std::ostream& operator << (std::ostream& stream, const Robot::Move& move) {

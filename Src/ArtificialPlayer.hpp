@@ -13,7 +13,7 @@ public:
     explicit ArtificialPlayer(BoardGraph& graph);
 
     // Chemin le plus court en fonction d'un set de mouvements (implémentation de a*)
-    std::vector<Play> play(Robot origin, Location destination, MoveDeck& deck);
+    std::vector<Robot::Move> play(Robot origin, Location destination, std::vector<Robot::Move>& deck);
 
 private:
     // Elements de A* :
@@ -67,7 +67,7 @@ private:
     bool isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, const Node &n);
 
     // Reconstruit le chemin à parcourir après traitement des sommets par a*
-    std::vector<Play> buildPath(Robot origin, Node& destination, std::queue<Node> closedList);
+    std::vector<Robot::Move> buildPath(Robot origin, Node& destination, std::queue<Node> closedList);
 };
 
 #endif //PROJET_ARTIFICIALPLAYER_HPP

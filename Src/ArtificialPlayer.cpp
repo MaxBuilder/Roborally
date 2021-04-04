@@ -8,21 +8,13 @@ ArtificialPlayer::Node::Node(Robot c, Robot p, int h, int cost, const std::vecto
 ArtificialPlayer::ArtificialPlayer(BoardGraph& graph)
 : mGraph(graph) {}
 
-std::vector<Play> ArtificialPlayer::play(Robot origin, Location destination, MoveDeck& deck) {
+std::vector<Robot::Move> ArtificialPlayer::play(Robot origin, Location destination, std::vector<Robot::Move>& deck) {
     // Variables de l'algorithme a* :
     std::priority_queue<Node, std::vector<Node>, NodeComp> openList;
     std::queue<Node> closedList;
 
-    // Tirage des mouvements (affichage pour le debug)
-    auto d = deck.draw();
-    std::cout << "Coups possibles : " << std::endl;
-    for(auto m : d) {
-        std::cout << m << std::endl;
-    }
-    std::cout << std::endl;
-
     // Ajout du sommet inital :
-    openList.push(Node(origin, origin, 0, 0, d, 5, Robot::Move::None));
+    openList.push(Node(origin, origin, 0, 0, deck, 5, Robot::Move::None));
 
     // Traitement des sommets :
     while(!openList.empty()) {
@@ -65,17 +57,17 @@ std::vector<Play> ArtificialPlayer::play(Robot origin, Location destination, Mov
     }
 
     // Approximation du sommet le plus proche (à faire)
-    return std::vector<Play>();
+    return std::vector<Robot::Move>();
 
 }
 
-std::vector<Play> ArtificialPlayer::buildPath(Robot origin, Node& destination, std::queue<Node> closedList) {
-    std::vector<Play> res;
+std::vector<Robot::Move> ArtificialPlayer::buildPath(Robot origin, Node& destination, std::queue<Node> closedList) {
+    std::vector<Robot::Move> res;
     Node temp = destination;
 
     while(temp.current != origin) {
         std::queue<Node> tempQ = closedList;
-        res.emplace_back(temp.parent, temp.transition);
+        res.emplace_back(temp.transition);
         while(tempQ.front().current != temp.parent)
             tempQ.pop();
         temp = tempQ.front();
