@@ -44,12 +44,12 @@ std::vector<Play> ArtificialPlayer::play(Robot origin, Location destination, Mov
             if(!isInClosedList(closedList, v)) {
                 if(isInOpenListWithLowerCost(openList, v)) {
 
-                    std::queue<Node> temp; // Mise à jour du coût
+                    std::queue<Node> temp; // Mise à jour du coût (complexité catastrophique mais pas trop le choix)
                     while(!openList.empty()) {
                         Node tempNode = openList.top();
                         openList.pop();
                         if(tempNode.current == v.current) {
-                            //tempNode = v;
+                            tempNode = v;
                         }
                         temp.push(tempNode);
                     }

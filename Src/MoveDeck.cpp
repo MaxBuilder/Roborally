@@ -1,11 +1,12 @@
 #include "MoveDeck.hpp"
 
 #include <random>
+#include <chrono>
 
 MoveDeck::MoveDeck() : moveDrawn(0) {}
 
 void MoveDeck::shuffle() {
-    std::shuffle(moves.begin(), moves.end(), std::mt19937(std::random_device()()));
+    std::shuffle(moves.begin(), moves.end(), std::mt19937(std::chrono::steady_clock::now().time_since_epoch().count()));
 }
 
 void MoveDeck::add(Robot::Move move, int nb) {
