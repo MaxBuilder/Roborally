@@ -29,13 +29,13 @@ std::vector<Play> artificialPlayer::play(Robot origin, Location destination, mov
         Node u = openList.top();
         openList.pop();
 
-        std::cout << u.current << " " << u.movesLeft << std::endl;
+        //std::cout << u.current << " " << u.movesLeft << std::endl;
         if(u.current.location == destination) { // Si le but est atteint on reconstruit le chemin
-            std::cout << "Found !!!";
+            //std::cout << "Found !!!";
             return buildPath(u, closedList, origin);
         }
 
-        std::cout << "Transi" << std::endl;
+        //std::cout << "Transi" << std::endl;
         auto transitions = mGraph.getTransitions(u.current);
         //std::cout << "Nouveau sommet" << std::endl;
         for(auto transition : transitions) { // Exploration des voisins
@@ -45,14 +45,14 @@ std::vector<Play> artificialPlayer::play(Robot origin, Location destination, mov
             //std::cout << "v : " << v.current << " " << v.movesLeft << std::endl;
 
             if(!checkTransition(v)) {
-                std::cout << "Cut transition" << std::endl;
+                //std::cout << "Cut transition" << std::endl;
                 continue;
             }
-            std::cout << "Go transition" << std::endl;
+            //std::cout << "Go transition" << std::endl;
 
             if(!isInClosedList(closedList, v)) {
                 if(isInOpenListWithLowerCost(openList, v)) {
-                    std::cout << v.costSoFar << std::endl;
+                    //std::cout << v.costSoFar << std::endl;
                     // Mise à jour du coût
                     std::queue<Node> temp;
                     while(!openList.empty()) {
@@ -80,12 +80,19 @@ std::vector<Play> artificialPlayer::play(Robot origin, Location destination, mov
 }
 
 std::vector<Play> artificialPlayer::buildPath(Node &destination, std::queue<Node> closedList, Robot origin) {
+    //std::cout << " Call " << std::endl;
+    //std::cout << closedList.size() << std::endl;
+
     std::vector<Play> res;
     Node temp = destination;
+
     while(temp.current != origin) {
+        //std::cout << temp.current << std::endl;
         std::queue<Node> tempQ = closedList;
+
         res.emplace_back(temp.parent, temp.transition);
-        while(tempQ.front().parent != temp.parent)
+
+        while(tempQ.front().current != temp.parent)
             tempQ.pop();
 
         temp = tempQ.front();

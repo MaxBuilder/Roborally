@@ -21,9 +21,9 @@ int main() {
     for(auto& step : path) {
         std::cout << step.robot << " -> " << step.move << std::endl;
     }
-    std::cout << end << " - Terminé" << std::endl;
+    std::cout << end << " - Termine" << std::endl;
 
-    std::cout << std::endl << "Vérification avec le plateau:" << std::endl;
+    std::cout << std::endl << "Verification avec le plateau:" << std::endl;
     Robot test = start;
     for(auto& step : path) {
         std::cout << step.robot << std::endl;
@@ -35,7 +35,7 @@ int main() {
 
     // Joueur artificiel
     moveDeck deck;
-    /*
+
     deck.add(Robot::Move::FORWARD_1, 3);
     deck.add(Robot::Move::FORWARD_2, 2);
     deck.add(Robot::Move::FORWARD_3, 1);
@@ -44,14 +44,14 @@ int main() {
     deck.add(Robot::Move::TURN_RIGHT, 1);
     deck.add(Robot::Move::U_TURN, 1);
     deck.shuffle();
-     */
+    /*
     deck.add(Robot::Move::FORWARD_1, 2);
     deck.add(Robot::Move::FORWARD_2, 2);
     deck.add(Robot::Move::FORWARD_3, 1);
     deck.add(Robot::Move::BACKWARD_1, 1);
     deck.add(Robot::Move::TURN_LEFT, 1);
     deck.add(Robot::Move::TURN_RIGHT, 1);
-    deck.add(Robot::Move::U_TURN, 1);
+    deck.add(Robot::Move::U_TURN, 1);*/
 
     artificialPlayer player(graph);
     auto autoPath = player.play(start, endLoc, deck);
@@ -60,7 +60,7 @@ int main() {
     for(auto& step : autoPath) {
         std::cout << step.robot << " -> " << step.move << std::endl;
     }
-    std::cout << end << " - Terminé" << std::endl;
+    std::cout << end << " - Termine" << std::endl;
 
     return 0 ;
 }
