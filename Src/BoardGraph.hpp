@@ -21,7 +21,7 @@ struct Play {
 
 // Foncteur de hashage du robot
 struct RobotHash {
-    std::size_t operator()(const Robot& r) const {
+    std::size_t operator () (const Robot& r) const {
         long long concat = r.location.line;
         concat <<= 8 * sizeof(int);
         concat += r.location.column;
@@ -34,7 +34,7 @@ struct RobotHash {
 
 // Foncteur de comparaison d'égalité du robot
 struct RobotEqual {
-    bool operator()(const Robot& lhs, const Robot& rhs) const {
+    bool operator () (const Robot& lhs, const Robot& rhs) const {
         return lhs.location == rhs.location and lhs.status == rhs.status;
     }
 };

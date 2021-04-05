@@ -21,47 +21,31 @@ std::vector<Robot::Move> ArtificialPlayer::play(Robot origin, Location destinati
         Node u = openList.top();
         openList.pop();
 
-        if(u.current.location == destination) // Si le but est atteint on reconstruit le chemin
+        if(u.current.location == destination) // Si le but est atteint, on reconstruit le chemin
             return buildPath(origin, u, closedList);
 
         auto transitions = mGraph.getTransitions(u.current);
         for(auto transition : transitions) { // Exploration des voisins
             int cost = u.costSoFar + 1;
-            int heuristic = cost + distance(destination, transition.robot.location);
+            int heuristic = cost + approx(destination, transition.robot.location);
             Node v(transition.robot, u.current, heuristic, cost, u.hand, u.movesLeft, transition.move);
 
-            if(!checkTransition(v))
+            if(!checkTransition(v)) // Vérification de la possibilité de passer la transition
                 continue;
 
-            if(!isInClosedList(closedList, v)) {
-                if(isInOpenListWithLowerCost(openList, v)) {
-
-                    std::queue<Node> temp; // Mise à jour du coût (complexité catastrophique mais pas trop le choix)
-                    while(!openList.empty()) {
-                        Node tempNode = openList.top();
-                        openList.pop();
-                        if(tempNode.current == v.current) {
-                            tempNode = v;
-                        }
-                        temp.push(tempNode);
-                    }
-                    while (!temp.empty()) {
-                        openList.push(temp.front());
-                        temp.pop();
-                    }
-                }
-                else openList.push(v);
+            if(not isInClosedList(closedList, v) and not isInOpenListWithLowerCost(openList, v)) {
+                 openList.push(v);
             }
         }
         closedList.push(u);
     }
 
-    // Approximation du sommet le plus proche (à faire)
+    // Si aucun chemin trouvé, on retourne un chemin vide
     return std::vector<Robot::Move>();
 
 }
 
-std::vector<Robot::Move> ArtificialPlayer::buildPath(Robot origin, Node& destination, std::queue<Node> closedList) {
+std::vector<Robot::Move> ArtificialPlayer::buildPath(Robot origin, Node& destination, const std::queue<Node>& closedList) {
     std::vector<Robot::Move> res;
     Node temp = destination;
 
@@ -111,7 +95,7 @@ bool ArtificialPlayer::checkTransition(Node &n) {
     return false;
 }
 
-int ArtificialPlayer::distance(Location l1, Location l2) {
+int ArtificialPlayer::approx(Location l1, Location l2) {
     int d = std::abs(l1.line - l2.line) + std::abs(l1.column - l2.column);
     int r = 0;
     if(d % 3 != 0)

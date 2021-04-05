@@ -29,21 +29,21 @@ BoardGraph::BoardGraph(Board &board) { // Choix d'un parcours exhaustif de toute
     }
 }
 
-// Obligé d'utiliser une template et un foncteur pour la comparaison (le compilateur n'acceptais pas une lambdaà cause de la pair)
+// Obligé d'utiliser une template et un foncteur pour la comparaison (le compilateur n'acceptais pas une lambda à cause de la pair)
 template<typename T, typename C>
 struct comp {
     bool operator () (const std::pair<T, C>& lhs, const std::pair<T, C>& rhs) {return lhs.second > rhs.second; }
 };
 
 void BoardGraph::shortestPath(const Robot& origin, std::unordered_map<Robot, int, RobotHash, RobotEqual>& d, std::unordered_map<Robot, Play, RobotHash, RobotEqual>& p) {
-    // Utilisation de paires (sommet + distance) pour éviter de créer un nouveau type)
+    // Utilisation de paires (sommet + approx) pour éviter de créer un nouveau type)
     std::priority_queue<std::pair<Robot, int>, std::vector<std::pair<Robot, int>>, comp<Robot, int>> s; // File à priorité (basse)
 
     // Initialisation des distances au max
     for(const auto& vertex : mGraph)
         d[vertex.first] = std::numeric_limits<int>::max();
 
-    // On place l'origine dans la file avec une distance de 0 :
+    // On place l'origine dans la file avec une approx de 0 :
     s.push(std::make_pair(origin, 0));
     d[origin] = 0;
 
@@ -55,8 +55,8 @@ void BoardGraph::shortestPath(const Robot& origin, std::unordered_map<Robot, int
         // Exploration de toutes les transitions du sommet
         for(Play t : mGraph[u]) {
             Robot v = t.robot;
-            if(d[v] > d[u] + 1) { // Un chemin plus court est trouvé
-                d[v] = d[u] + 1; // Mise à jour de la distance
+            if(d[u] + 1 < d[v]) { // Un chemin plus court est trouvé
+                d[v] = d[u] + 1; // Mise à jour de la approx
                 p[v] = Play(u, t.move); // Mise à jour du prédecesseur
                 s.push(std::make_pair(v, d[v]));
             }
