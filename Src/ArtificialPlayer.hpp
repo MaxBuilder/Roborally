@@ -4,9 +4,6 @@
 #include "BoardGraph.hpp"
 #include "MoveDeck.hpp"
 
-#include <iostream>
-
-
 class ArtificialPlayer {
 public:
     // Initialise le joueur artificiel avec un graph
@@ -39,13 +36,13 @@ private:
     };
 
     // Fonction auxiliaires
-    bool checkTransition(Node& n);
-    int approx(Location l1, Location l2);
-    bool isInClosedList(std::queue<Node> closedList, const Node &node);
-    bool isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, const Node &n);
+    static bool checkTransition(Node& n);
+    static int approx(Location l1, Location l2);
+    static bool isInClosedList(std::queue<Node> closedList, const Node &node);
+    static bool isInOpenListWithLowerCost(std::priority_queue<Node, std::vector<Node>, NodeComp> openList, const Node &n);
 
     // Reconstruit le chemin à parcourir après traitement des sommets par a*
-    std::vector<Robot::Move> buildPath(Robot origin, Node& destination, const std::queue<Node>& closedList);
+    static std::vector<Robot::Move> buildPath(Robot origin, Node& destination, const std::queue<Node>& closedList);
 };
 
 #endif //PROJET_ARTIFICIALPLAYER_HPP

@@ -40,7 +40,7 @@ std::vector<Robot::Move> ArtificialPlayer::play(Robot origin, Location destinati
         closedList.push(u);
     }
 
-    // Si aucun chemin trouvé, on retourne un chemin vide
+    // Si aucun chemin n'est trouvé, on retourne un tableau vide
     return std::vector<Robot::Move>();
 
 }
