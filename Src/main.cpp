@@ -7,7 +7,7 @@
 
 int main() {
     std::cout << "Chargement du plateau ... ";
-    RR::Board b("Data/board.txt") ;
+    RR::Board b("../Data/board.txt") ;
     BoardGraph graph(b);
     std::cout << "OK !" << std::endl;
 

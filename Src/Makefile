@@ -3,11 +3,11 @@ CXX      = g++
 .DEFAULT_GOAL := all
 
 SOURCES = 
-SOURCES += board.cpp
+SOURCES += Board.cpp 
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
-CXXFLAGS += -g -Wall -pedantic
+CXXFLAGS += -std=c++17 -g -Wall -pedantic
 LDFLAGS +=
 
 $(OBJECTS) : %.o : %.cpp
@@ -15,6 +15,21 @@ $(OBJECTS) : %.o : %.cpp
 
 CLEAN_OBJECTS = $(OBJECTS)
 TARGETS = 
+
+########## demo ##########
+
+DEMO_SOURCES = main.cpp BoardGraph.cpp MoveDeck.cpp ArtificialPlayer.cpp
+DEMO_OBJECTS = $(DEMO_SOURCES:.cpp=.o)
+
+demo : $(DEMO_OBJECTS) $(OBJECTS) $(HEADERS)
+	$(CXX) $(DEMO_OBJECTS) $(OBJECTS) -o $@ $(LDFLAGS)
+	
+$(DEMO_OBJECTS): %.o : %.cpp
+	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
+
+all : demo
+TARGETS += demo
+CLEAN_OBJECTS += $(DEMO_OBJECTS)
 
 ########## test_board ##########
 
