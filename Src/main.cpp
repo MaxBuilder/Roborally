@@ -6,10 +6,15 @@
 #include <chrono>
 
 int main() {
+    std::cout << std::endl << "----------------------------------------------------------------------" << std::endl;
     std::cout << "Chargement du plateau ... ";
     RR::Board b("../Data/board.txt") ;
+
+    // Calcul du temps de génération du graph
+    auto chronoPlateauBegin = std::chrono::high_resolution_clock::now();
     BoardGraph graph(b);
-    std::cout << "OK !" << std::endl;
+    auto chronoPlateauEnd = std::chrono::high_resolution_clock::now();
+    std::cout << "OK : " << std::chrono::duration<double, std::milli> (chronoPlateauEnd - chronoPlateauBegin).count() << " ms" << std::endl;
 
     // Variables de test :
     Robot start = Robot({0, 1}, Robot::Status::EAST); // 5,4
