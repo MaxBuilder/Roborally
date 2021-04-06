@@ -11,5 +11,5 @@ Les plateaux sont contenus dans le dossier "Data" (la démo utilise board.txt).
 Pour compiler et utiliser le projet :
 - Se rendre dans le dossier Src
 - Executer la commande "make" (ou plus précisemment "make demo" / "make app")
-- Pour lancer l'application web, saisir "./app ../Data/[nom_pleateau]"
+- Pour lancer l'application web, saisir "./app ../Data/[nom_plateau]"
 - Pour lancer la démonstration des algoritmes de recherche de chemin, saisir "./demo"
